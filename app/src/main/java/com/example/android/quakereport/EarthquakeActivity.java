@@ -36,14 +36,7 @@ public class EarthquakeActivity extends AppCompatActivity {
         setContentView(R.layout.earthquake_activity);
 
         // Create a fake list of earthquake locations.
-        ArrayList<Earthquake> earthquakes = new ArrayList<>();
-        earthquakes.add(new Earthquake(7.2, "San Francisco", 3221683200L));
-        earthquakes.add(new Earthquake(6.1, "London", 3520195200L));
-        earthquakes.add(new Earthquake(3.9, "Tokyo", 3498422400L));
-        earthquakes.add(new Earthquake(5.4, "Mexico City", 3481920000L));
-        earthquakes.add(new Earthquake(2.8, "Moscow", 3442435200L));
-        earthquakes.add(new Earthquake(4.9, "Rio de Janeiro", 3428179200L));
-        earthquakes.add(new Earthquake(1.6, "Paris", 3402777600L));
+        ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
 
         // Create EarthquakeAdapter.
         EarthquakeAdapter adapter = new EarthquakeAdapter(this, earthquakes);
