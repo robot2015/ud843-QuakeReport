@@ -1,15 +1,11 @@
 package com.example.android.quakereport;
 
-import android.util.Log;
-
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class Earthquake {
-
-    public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
     // Create constructor.
     Earthquake(double mag, String place, long time, String url) {
