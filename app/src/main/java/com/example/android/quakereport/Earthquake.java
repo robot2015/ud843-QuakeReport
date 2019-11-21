@@ -5,16 +5,18 @@ import android.util.Log;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class Earthquake {
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
     // Create constructor.
-    public Earthquake(double mag, String place, long time) {
+    Earthquake(double mag, String place, long time, String url) {
         mMag = mag;
         mPlace = place;
         mTime = time;
+        mUrl = url;
     }
 
     // Earthquake magnitude.
@@ -24,12 +26,12 @@ public class Earthquake {
         return mMag;
     }
 
-    public String getMagString() {
+    String getMagString() {
         DecimalFormat decimalFormat = new DecimalFormat("0.0");
         return decimalFormat.format(mMag);
     }
 
-    public int getMagIntDown() {
+    int getMagIntDown() {
         return (int) mMag;
     }
 
@@ -40,7 +42,7 @@ public class Earthquake {
         return mPlace;
     }
 
-    public String getPrimaryLocation() {
+    String getPrimaryLocation() {
         String primaryLocation;
 
         if (mPlace.contains(" of ")) {
@@ -52,7 +54,7 @@ public class Earthquake {
         return primaryLocation;
     }
 
-    public String getLocationOffset() {
+    String getLocationOffset() {
         String locationOffset;
 
         if (mPlace.contains(" of ")) {
@@ -71,13 +73,20 @@ public class Earthquake {
         return mTime;
     }
 
-    public String getTimeString() {
-        DateFormat timeFormat = new SimpleDateFormat("hh:mm:ss a");
+    String getTimeString() {
+        DateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.US);
         return timeFormat.format(mTime);
     }
 
-    public String getDateString() {
-        DateFormat dateFormat = new SimpleDateFormat("LLL DD, yyyy");
+    String getDateString() {
+        DateFormat dateFormat = new SimpleDateFormat("LLL DD, yyyy", Locale.US);
         return dateFormat.format(mTime);
+    }
+
+    // Earthquake URL.
+    private String mUrl;
+
+    String getUrl() {
+        return mUrl;
     }
 }

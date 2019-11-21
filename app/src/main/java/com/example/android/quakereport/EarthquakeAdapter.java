@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
     // Create constructor.
-    public EarthquakeAdapter(Activity context, ArrayList<Earthquake> earthquakes) {
+    EarthquakeAdapter(Activity context, ArrayList<Earthquake> earthquakes) {
         super(context, 0, earthquakes);
     }
 
@@ -43,7 +43,7 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         int magnitudeColor = getMagnitudeColor(currentQuake.getMagIntDown());
 
         // Set the color on the magnitude circle.
-        magnitudeCircle.setColor(ContextCompat.getColor(getContext(), magnitudeColor));
+        magnitudeCircle.setColor(magnitudeColor);
 
         // Set the earthquake location offset.
         TextView locationOffsetTextView = listItemView.findViewById(R.id.location_offset_text_view);
@@ -70,8 +70,6 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
         switch (magnitude) {
             case 0:
-                magColor = R.color.magnitude1;
-                break;
             case 1:
                 magColor = R.color.magnitude1;
                 break;
@@ -103,6 +101,6 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
                 magColor = R.color.magnitude10plus;
         }
 
-        return magColor;
+        return ContextCompat.getColor(getContext(), magColor);
     }
 }
