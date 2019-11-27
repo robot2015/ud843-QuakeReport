@@ -17,10 +17,9 @@ package com.example.android.quakereport;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -47,8 +46,6 @@ public class EarthquakeActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.list);
         listView.setAdapter(adapter);
 
-        Log.v(LOG_TAG, "List item created.");
-
         // Create click listener to point to web URL.
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -65,5 +62,13 @@ public class EarthquakeActivity extends AppCompatActivity {
                 startActivity(webIntent);
             }
         });
+    }
+
+    private class EarthquakeAsyncTask extends AsyncTask<String, Void, ArrayList<Earthquake>> {
+
+        @Override
+        protected ArrayList<Earthquake> doInBackground(String... strings) {
+            return null;
+        }
     }
 }
