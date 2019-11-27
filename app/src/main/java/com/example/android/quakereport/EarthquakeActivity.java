@@ -37,7 +37,7 @@ public class EarthquakeActivity extends AppCompatActivity {
         setContentView(R.layout.earthquake_activity);
 
         // Create a fake list of earthquake locations.
-        final ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
+        final ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes(QueryUtils.SAMPLE_JSON_RESPONSE);
 
         // Create EarthquakeAdapter.
         EarthquakeAdapter adapter = new EarthquakeAdapter(this, earthquakes);
@@ -67,8 +67,19 @@ public class EarthquakeActivity extends AppCompatActivity {
     private class EarthquakeAsyncTask extends AsyncTask<String, Void, ArrayList<Earthquake>> {
 
         @Override
-        protected ArrayList<Earthquake> doInBackground(String... strings) {
+        protected ArrayList<Earthquake> doInBackground(String... urls) {
+
+            // Check if data is valid.
+            if (urls.length < 1 || urls[0] == null) {
+                return null;
+            }
+
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Earthquake> earthquakes) {
+
         }
     }
 }
