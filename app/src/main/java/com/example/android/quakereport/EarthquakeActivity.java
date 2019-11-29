@@ -19,7 +19,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,36 +31,43 @@ import java.util.ArrayList;
 
 public class EarthquakeActivity extends AppCompatActivity {
 
-    public static final String LOG_TAG = EarthquakeActivity.class.getName();
+    private static final String LOG_TAG = EarthquakeActivity.class.getName();
+
+    private EarthquakeAdapter adapter;
+
+    private static final String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=6&limit=10";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        // Create a fake list of earthquake locations.
-        final ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes(QueryUtils.SAMPLE_JSON_RESPONSE);
-
         // Create EarthquakeAdapter.
-        EarthquakeAdapter adapter = new EarthquakeAdapter(this, earthquakes);
+        adapter = new EarthquakeAdapter(this, new ArrayList<Earthquake>());
 
         // Create the ListView object and attach the adapter.
         ListView listView = findViewById(R.id.list);
         listView.setAdapter(adapter);
 
+        // Get earthquake information in separate thread.
+        EarthquakeAsyncTask task = new EarthquakeAsyncTask();
+        task.execute(USGS_REQUEST_URL);
+
         // Create click listener to point to web URL.
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get URL.
-                String url = earthquakes.get(position).getUrl();
+                // Find the current earthquake that was clicked on
+                Earthquake currentEarthquake = adapter.getItem(position);
 
-                // Display URL to log.
-                Log.v(LOG_TAG, "URL = " + url);
+                // Convert the String URL into a URI object (to pass into the Intent constructor)
+                Uri url = Uri.parse(currentEarthquake.getUrl());
+
+                Log.v(LOG_TAG, url.toString());
 
                 // Send URL to web browser intent.
                 Intent webIntent = new Intent(Intent.ACTION_VIEW);
-                webIntent.setData(Uri.parse(url));
+                webIntent.setData(url);
                 startActivity(webIntent);
             }
         });
@@ -74,12 +83,20 @@ public class EarthquakeActivity extends AppCompatActivity {
                 return null;
             }
 
-            return null;
+            String jsonResponse = QueryUtils.getEarthquakeJson(urls[0]);
+            return QueryUtils.extractEarthquakes(jsonResponse);
         }
 
         @Override
         protected void onPostExecute(ArrayList<Earthquake> earthquakes) {
+            // Clear the adapter of previous earthquake data
+            adapter.clear();
 
+            // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
+            // data set. This will trigger the ListView to update.
+            if (earthquakes != null && !earthquakes.isEmpty()) {
+                adapter.addAll(earthquakes);
+            }
         }
     }
 }

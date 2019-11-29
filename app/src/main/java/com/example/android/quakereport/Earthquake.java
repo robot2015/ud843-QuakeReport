@@ -75,7 +75,7 @@ public class Earthquake {
     }
 
     String getDateString() {
-        DateFormat dateFormat = new SimpleDateFormat("LLL DD, yyyy", Locale.US);
+        DateFormat dateFormat = new SimpleDateFormat("LLL dd, yyyy", Locale.US);
         return dateFormat.format(mTime);
     }
 
