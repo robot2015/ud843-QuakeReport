@@ -27,6 +27,9 @@ final class QueryUtils {
 
     // Get earthquake data from USGS.
     static String getEarthquakeJson(String stringUrl) {
+
+        Log.v(LOG_TAG, "getEarthquakeJson");
+
         // Get URL from string.
         URL url = createUrl(stringUrl);
 
