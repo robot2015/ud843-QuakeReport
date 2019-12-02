@@ -3,8 +3,11 @@ package com.example.android.quakereport;
 
 import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +40,9 @@ public class EarthquakeActivity extends AppCompatActivity
     // TextView that is displayed when the list is empty.
     private TextView mEmptyStateTextView;
 
+    // View that is displayed when loading data.
+    private View loadingIndicator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +61,9 @@ public class EarthquakeActivity extends AppCompatActivity
         // Initialize empty text view to hidden.
         mEmptyStateTextView = findViewById(R.id.empty_view);
         earthquakeListView.setEmptyView(mEmptyStateTextView);
+
+        // Initialize loading indicator.
+        loadingIndicator = findViewById(R.id.loading_indicator);
 
         // Set an item click listener on the ListView, which sends an intent to a web browser
         // to open a website with more information about the selected earthquake.
@@ -81,8 +90,14 @@ public class EarthquakeActivity extends AppCompatActivity
         // Initialize the loader. Pass in the int ID constant defined above and pass in null for
         // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
         // because this activity implements the LoaderCallbacks interface).
-        loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
-        Log.v(LOG_TAG, "loaderManager.initLoader");
+        if (isOnline()) {
+            loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
+            Log.v(LOG_TAG, "loaderManager.initLoader");
+        } else {
+            // Set empty state text to display "No network connection."
+            loadingIndicator.setVisibility(View.GONE);
+            mEmptyStateTextView.setText(R.string.no_connection);
+        }
     }
 
     @Override
@@ -93,11 +108,18 @@ public class EarthquakeActivity extends AppCompatActivity
         return new EarthquakeLoader(this, USGS_REQUEST_URL);
     }
 
+    // Check for internet connection.
+    public boolean isOnline() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
 
-        // Hide loading indicator because the data has been loaded
-        View loadingIndicator = findViewById(R.id.loading_indicator);
+        // Hide loading indicator because the data has been loaded.
         loadingIndicator.setVisibility(View.GONE);
 
         // Set empty state text to display "No earthquakes found."
