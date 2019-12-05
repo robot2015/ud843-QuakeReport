@@ -27,6 +27,9 @@ public class SettingsActivity extends AppCompatActivity {
             Preference minMagnitude = findPreference(getString(R.string.settings_min_magnitude_key));
             bindPreferenceSummaryToValue(minMagnitude);
 
+            Preference quakeLimit = findPreference(getString(R.string.settings_limit_key));
+            bindPreferenceSummaryToValue(quakeLimit);
+
             Preference orderBy = findPreference(getString(R.string.settings_order_by_key));
             bindPreferenceSummaryToValue(orderBy);
         }
